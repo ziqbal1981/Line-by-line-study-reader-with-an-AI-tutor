@@ -24,6 +24,7 @@
   --warn: #a4372b;
   --ok: #1b7443;
   --shade: rgba(23, 33, 43, .45);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
   --read: 'Literata', Georgia, 'Times New Roman', serif;
   --ui: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
@@ -35,13 +36,13 @@
   :root:not([data-theme="light"]) {
     --bg: #12181e; --surface: #1a222a; --ink: #e4e9ee; --muted: #93a0ad; --rule: #2c3742;
     --mark: #5b4a12; --mark-ink: #fff3c4; --accent: #4fc2b4; --accent-ink: #06211e;
-    --accent-soft: #17332f; --warn: #f08a7c; --ok: #6fd39a; --shade: rgba(0, 0, 0, .6); color-scheme: dark;
+    --accent-soft: #17332f; --warn: #f08a7c; --ok: #6fd39a; --shade: rgba(0, 0, 0, .6); --s1: #3987e5; --s2: #d95926; --s3: #199e70; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #12181e; --surface: #1a222a; --ink: #e4e9ee; --muted: #93a0ad; --rule: #2c3742;
   --mark: #5b4a12; --mark-ink: #fff3c4; --accent: #4fc2b4; --accent-ink: #06211e;
-  --accent-soft: #17332f; --warn: #f08a7c; --ok: #6fd39a; --shade: rgba(0, 0, 0, .6); color-scheme: dark;
+  --accent-soft: #17332f; --warn: #f08a7c; --ok: #6fd39a; --shade: rgba(0, 0, 0, .6); --s1: #3987e5; --s2: #d95926; --s3: #199e70; color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -157,6 +158,32 @@ svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; s
 .msg .body p strong:only-child { display: inline-block; margin-top: 6px; }
 
 .top-card { margin: 0 0 16px; }
+/* charts inside answers */
+.viz { position: relative; margin: 10px 0 4px; padding: 12px 12px 8px; background: var(--bg); border: 1px solid var(--rule); border-radius: 10px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.viz-title { font-weight: 600; font-size: 14px; }
+.viz svg { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; fill: none; stroke: none; stroke-width: 0; }
+.viz svg text { font-family: var(--ui); font-size: 12px; fill: var(--muted); }
+.viz svg .lab { fill: var(--ink); font-weight: 500; }
+.viz svg .grid { stroke: var(--rule); stroke-width: 1; }
+.viz svg .axis { stroke: var(--muted); stroke-width: 1; }
+.viz svg .mark { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 4 4; opacity: .7; }
+.viz svg .xh { stroke: var(--muted); stroke-width: 1; }
+.viz-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--ink); }
+.viz-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.viz-legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.viz-tt { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 8px; font-size: 12px; box-shadow: 0 4px 14px var(--shade); white-space: nowrap; font-variant-numeric: tabular-nums; z-index: 2; }
+.viz details { font-size: 13px; color: var(--muted); }
+.viz details summary { cursor: pointer; }
+.viz-tbl { overflow-x: auto; }
+.viz table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; margin-top: 6px; color: var(--ink); }
+.viz th, .viz td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.viz th { font-weight: 500; color: var(--muted); }
+.viz td.r, .viz th.r { text-align: right; }
+.viz tr.final td { font-weight: 600; }
+.viz-note { font-size: 13px; color: var(--muted); }
+.vis-btn { display: none; grid-column: 2; justify-self: start; margin: 4px 8px 2px; border: 1px solid var(--s1); color: var(--ink); background: var(--surface); border-radius: 999px; padding: 3px 12px; font-size: 13px; font-weight: 500; }
+.vis-btn:hover { background: var(--accent-soft); }
+.line.cur.numline .vis-btn { display: inline-flex; align-items: center; gap: 6px; }
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field input, .field select, .field textarea { background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 10px; width: 100%; }
 .field textarea { min-height: 96px; resize: vertical; }
@@ -338,6 +365,9 @@ body.drop { outline: 3px dashed var(--accent); outline-offset: -8px; }
   <label class="set">Pause automatically
     <select id="pauseAt"><option value="none">Never</option><option value="para">After each paragraph</option><option value="topic">After each topic</option><option value="tutor">After each topic, then test me</option></select>
   </label>
+  <label class="set">Numbers and formulas
+    <select id="numMode"><option value="auto">Pause and show visually</option><option value="button">Only show a Visualize button</option></select>
+  </label>
   <div class="set">Text size
     <span class="row"><button class="btn icon" id="fsDown" type="button" aria-label="Smaller text">A−</button><button class="btn icon" id="fsUp" type="button" aria-label="Larger text">A+</button></span>
   </div>
@@ -390,10 +420,11 @@ Expected Shortfall fixes this. It is the average loss in the tail beyond the VaR
 Backtesting Expected Shortfall is harder than backtesting VaR. A VaR model is checked by counting exceptions, the days when the loss exceeded the forecast, and comparing that count with what the confidence level implies.`;
 
 const state = { name: '', lines: [], topics: [], idx: 0, topicIdx: 0, doubts: {}, aiTopics: null, autoTopics: false, sample: false, playing: false, resumeAfterDoubt: false, busy: false, tab: 'topics' };
-const prefs = { fs: 18, pauseAt: 'none', voice: true, rate: '1', speakAns: false, handsFree: false, voiceName: '', tier: 'default', help: true };
+const prefs = { fs: 18, pauseAt: 'none', voice: true, rate: '1', speakAns: false, handsFree: false, numMode: 'auto', voiceName: '', tier: 'default', help: true };
 try { Object.assign(prefs, JSON.parse(localStorage.getItem(PREFS) || '{}')); } catch (e) {}
 function savePrefs() { try { localStorage.setItem(PREFS, JSON.stringify(prefs)); } catch (e) {} }
 
+let autoShown = {};
 let sendT = null, peekT = null, sayToken = 0, voices = [], dueDismissed = false;
 
 /* ---------- tutor memory: profile, weak concepts, review cards ---------- */
@@ -515,6 +546,14 @@ function headLevel(p, next) {
   if (/^[A-Z]/.test(p) && p.length <= 60 && words <= 8 && !/^[-*•–]/.test(p) && next && next.length > 110 && !/^(\d+[.)]|[-*•–])\s/.test(next)) return 2;
   return 0;
 }
+// a line worth a picture: figures with units, decimals, formulas or several numbers
+function isNumeric(t) {
+  const nums = t.match(/\d+(?:[.,]\d+)?/g) || [];
+  if (!nums.length) return false;
+  if (/[=×÷√σμ∑±∫≈≤≥^]|\d\s*[%‰]|\d\.\d|\b(ratio|rate|variance|deviation|probability|percentile|quantile|formula|equation|multipl|divid|sum of|average|mean|median|correlation|regression|return|yield|interest|discount|volatility)/i.test(t)) return true;
+  return nums.filter(n => !/^(19|20)\d\d$/.test(n)).length >= 2;
+}
+const VIS_Q = 'Explain this line visually: draw a chart of what it describes and walk through the numbers step by step.';
 function buildLines(text) {
   const lines = [], pars = toParagraphs(text);
   pars.forEach((par, pi) => {
@@ -639,7 +678,7 @@ function setDoc(name, text, isSample, idx, doubts, aiTopics) {
   state.name = name; state.sample = isSample; state.rawText = text;
   state.lines = buildLines(text);
   state.idx = Math.min(Math.max(idx || 0, 0), Math.max(state.lines.length - 1, 0));
-  state.doubts = doubts || {}; state.aiTopics = aiTopics || null;
+  state.doubts = doubts || {}; state.aiTopics = aiTopics || null; autoShown = {};
   $('search').value = ''; computeTopics();
   renderLines(); renderTopics(); renderDoubts(); showPane();
   goTo(state.idx, true); save();
@@ -673,6 +712,7 @@ function renderLines() {
     const li = el('li', 'line' + (ln.gap ? ' gap' : '') + (ln.head ? ' head h' + ln.head : '') + (hasDoubt(i) ? ' has-doubt' : ''));
     li.dataset.i = i;
     li.append(el('span', 'num', i + 1), el('span', 'txt', ln.text));
+    if (!ln.head && isNumeric(ln.text)) { li.classList.add('numline'); const vb = el('button', 'vis-btn', 'Visualize this'); vb.type = 'button'; li.append(vb); }
     els.push(li); frag.appendChild(li);
   });
   ol.appendChild(frag);
@@ -865,6 +905,10 @@ function playCurrent() {
   const ln = state.lines[state.idx]; if (!ln) { setPlaying(false); return; }
   const advance = () => {
     if (token !== speakToken || !state.playing) return;
+    const cur = state.lines[state.idx];
+    if (prefs.numMode === 'auto' && !cur.head && isNumeric(cur.text) && !hasDoubt(state.idx) && !autoShown[state.idx] && sampleFn !== null) {
+      autoShown[state.idx] = 1; openDoubt(); ask(VIS_Q); return;
+    }
     const nx = state.idx + 1;
     if (nx >= state.lines.length) { setPlaying(false); return; }
     const newTopic = state.topics.some(t => t.i === nx);
@@ -942,12 +986,28 @@ function showNext(list) {
   (list || []).forEach(q => { const b = el('button', 'chip', q); b.type = 'button'; b.dataset.q = q; box.append(b); });
   box.hidden = !box.children.length;
 }
+function vizSlot(json) {
+  try { return '<div class="viz-slot" data-spec="' + btoa(unescape(encodeURIComponent(json))) + '"></div>'; } catch (e) { return ''; }
+}
+function hydrate(root) {
+  root.querySelectorAll('.viz-slot').forEach(slot => {
+    let node;
+    try { node = renderViz(JSON.parse(decodeURIComponent(escape(atob(slot.dataset.spec))))); } catch (e) { node = null; }
+    slot.replaceWith(node || el('p', 'viz-note', 'This chart could not be drawn.'));
+  });
+}
+function setAnswer(body, text) { body.innerHTML = md(text); hydrate(body); }
 function md(src) {
-  const out = []; let list = null, para = [], code = null;
+  const out = []; let list = null, para = [], code = null, lang = '';
   const flushP = () => { if (para.length) { out.push('<p>' + para.map(inline).join('<br>') + '</p>'); para = []; } };
   const flushL = () => { if (list) { out.push('<' + list.tag + '>' + list.items.map(i => '<li>' + inline(i) + '</li>').join('') + '</' + list.tag + '>'); list = null; } };
   for (const raw of src.split('\n')) {
-    if (/^\s*```/.test(raw)) { if (code) { out.push('<pre>' + esc(code.join('\n')) + '</pre>'); code = null; } else { flushP(); flushL(); code = []; } continue; }
+    const fence = raw.match(/^\s*```\s*([\w-]*)/);
+    if (fence) {
+      if (code) { out.push(lang === 'viz' ? vizSlot(code.join('\n')) : '<pre>' + esc(code.join('\n')) + '</pre>'); code = null; }
+      else { flushP(); flushL(); code = []; lang = fence[1].toLowerCase(); }
+      continue;
+    }
     if (code) { code.push(raw); continue; }
     const ln = raw.trim();
     let m;
@@ -957,7 +1017,7 @@ function md(src) {
     else if ((m = ln.match(/^#{1,6}\s+(.*)/))) { flushP(); flushL(); out.push('<p><strong>' + inline(m[1]) + '</strong></p>'); }
     else { flushL(); para.push(ln); }
   }
-  if (code) out.push('<pre>' + esc(code.join('\n')) + '</pre>');
+  if (code) out.push(lang === 'viz' ? '<p class="thinking">Drawing a chart…</p>' : '<pre>' + esc(code.join('\n')) + '</pre>');
   flushP(); flushL();
   return refs(out.join(''));
 }
@@ -973,11 +1033,194 @@ function speakAnswer(text) {
   sayAll(chunks);
 }
 
+/* ---------- charts from a small declarative spec (never code) ---------- */
+const SVGNS = 'http://www.w3.org/2000/svg';
+function sv(tag, attrs, text) { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; }
+function num(v) { const n = Number(v); return isFinite(n) ? n : null; }
+function fmtN(v) {
+  const a = Math.abs(v);
+  if (a >= 1e9) return +(v / 1e9).toFixed(1) + 'B';
+  if (a >= 1e6) return +(v / 1e6).toFixed(1) + 'M';
+  if (a >= 1e4) return +(v / 1e3).toFixed(1) + 'k';
+  if (a >= 100) return String(Math.round(v));
+  if (a >= 1) return String(+v.toFixed(2));
+  return a === 0 ? '0' : String(+v.toPrecision(2));
+}
+function ticks(min, max, n) {
+  const span = (max - min) || 1, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), err = raw / mag;
+  const step = (err >= 7.5 ? 10 : err >= 3.5 ? 5 : err >= 1.5 ? 2 : 1) * mag, out = [];
+  for (let v = Math.ceil(min / step) * step; v <= max + step * 1e-9; v += step) out.push(+v.toFixed(10));
+  return out;
+}
+function erf(x) { const t = 1 / (1 + 0.3275911 * Math.abs(x)); const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return x >= 0 ? y : -y; }
+function normCdf(x, m, s) { return 0.5 * (1 + erf((x - m) / (s * Math.SQRT2))); }
+function pct(p) { return (p * 100 < 1 ? +(p * 100).toFixed(2) : +(p * 100).toFixed(1)) + '%'; }
+const narrow = () => (window.innerWidth || 800) < 560;
+function renderViz(spec) {
+  if (!spec || typeof spec !== 'object') return null;
+  const t = String(spec.type || '');
+  const box = el('div', 'viz');
+  if (spec.title) box.append(el('div', 'viz-title', String(spec.title).slice(0, 120)));
+  if (t === 'steps') return vizSteps(spec, box);
+  if (t === 'bar') return vizBar(spec, box);
+  if (t === 'line' || t === 'dist') return vizXY(spec, box, t);
+  return null;
+}
+function addTable(box, head, rows, finalRow) {
+  const d = el('details'); d.append(el('summary', null, 'Show as a table'));
+  const wrap = el('div', 'viz-tbl'), tb = el('table'), tr = el('tr');
+  head.forEach((h, k) => tr.append(el('th', k ? 'r' : '', h))); tb.append(tr);
+  rows.forEach((r, j) => { const row = el('tr', finalRow && j === rows.length - 1 ? 'final' : ''); r.forEach((c, k) => row.append(el('td', k ? 'r' : '', c))); tb.append(row); });
+  wrap.append(tb); d.append(wrap); box.append(d);
+}
+function vizSteps(spec, box) {
+  const rows = (Array.isArray(spec.rows) ? spec.rows : []).slice(0, 14).map(r => [String(r.step || ''), String(r.calc || ''), String(r.result || '')]);
+  if (!rows.length) return null;
+  const wrap = el('div', 'viz-tbl'), tb = el('table'), hr = el('tr');
+  ['Step', 'Calculation', 'Result'].forEach((h, k) => hr.append(el('th', k === 2 ? 'r' : '', h))); tb.append(hr);
+  rows.forEach((r, j) => { const tr = el('tr', j === rows.length - 1 ? 'final' : ''); tr.append(el('td', '', r[0]), el('td', '', r[1]), el('td', 'r', r[2])); tb.append(tr); });
+  wrap.append(tb); box.append(wrap); return box;
+}
+function frame(W, H, m, xd, yd, xLabel, yLabel, xFmt) {
+  const svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img' });
+  const X = v => m.l + (v - xd[0]) / (xd[1] - xd[0] || 1) * (W - m.l - m.r);
+  const Y = v => H - m.b - (v - yd[0]) / (yd[1] - yd[0] || 1) * (H - m.t - m.b);
+  if (yd) ticks(yd[0], yd[1], 4).forEach(v => { svg.append(sv('line', { class: 'grid', x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v) })); svg.append(sv('text', { x: m.l - 8, y: Y(v) + 4, 'text-anchor': 'end' }, fmtN(v))); });
+  svg.append(sv('line', { class: 'axis', x1: m.l, x2: W - m.r, y1: H - m.b, y2: H - m.b }));
+  if (xd) ticks(xd[0], xd[1], W < 500 ? 4 : 6).forEach(v => svg.append(sv('text', { x: X(v), y: H - m.b + 18, 'text-anchor': 'middle' }, (xFmt || fmtN)(v))));
+  if (xLabel) svg.append(sv('text', { x: (m.l + W - m.r) / 2, y: H - 6, 'text-anchor': 'middle' }, String(xLabel).slice(0, 60)));
+  if (yLabel) svg.append(sv('text', { x: m.l, y: m.t - 6, 'text-anchor': 'start' }, String(yLabel).slice(0, 60)));
+  return { svg, X, Y };
+}
+function hoverLayer(box, svg, W, H, m, onMove) {
+  const tt = el('div', 'viz-tt'); tt.hidden = true; box.append(tt);
+  const xh = sv('line', { class: 'xh', y1: m.t, y2: H - m.b, visibility: 'hidden' }); svg.append(xh);
+  const dots = sv('g', {}); svg.append(dots);
+  const hit = sv('rect', { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: 'transparent' }); svg.append(hit);
+  const move = ev => {
+    const r = svg.getBoundingClientRect(), p = ev.touches ? ev.touches[0] : ev;
+    const sx = (p.clientX - r.left) / r.width * W;
+    const res = onMove(sx); if (!res) return;
+    xh.setAttribute('x1', res.x); xh.setAttribute('x2', res.x); xh.setAttribute('visibility', 'visible');
+    dots.textContent = ''; res.dots.forEach(d => dots.append(sv('circle', { cx: d.x, cy: d.y, r: 4.5, fill: d.c, stroke: 'var(--bg)', 'stroke-width': 2 })));
+    tt.textContent = ''; res.lines.forEach((l, k) => tt.append(k ? document.createElement('br') : '', l)); tt.hidden = false;
+    const br = box.getBoundingClientRect(), left = p.clientX - br.left + 12, top = p.clientY - br.top - 10;
+    tt.style.left = Math.min(left, br.width - tt.offsetWidth - 6) + 'px'; tt.style.top = Math.max(top - tt.offsetHeight, 4) + 'px';
+  };
+  const out = () => { tt.hidden = true; xh.setAttribute('visibility', 'hidden'); dots.textContent = ''; };
+  hit.addEventListener('mousemove', move); hit.addEventListener('mouseleave', out);
+  hit.addEventListener('touchstart', move, { passive: true }); hit.addEventListener('touchmove', move, { passive: true }); hit.addEventListener('touchend', out);
+}
+function drawMarks(svg, X, Y, H, m, W, xd, yd, marks, hlines) {
+  (marks || []).slice(0, 4).forEach((mk, k) => {
+    const x = num(mk && mk.x); if (x == null || x < xd[0] || x > xd[1]) return;
+    svg.append(sv('line', { class: 'mark', x1: X(x), x2: X(x), y1: m.t + 4 + k * 15, y2: H - m.b }));
+    const right = X(x) < (m.l + W - m.r) / 2;
+    svg.append(sv('text', { class: 'lab', x: X(x) + (right ? 6 : -6), y: m.t + 14 + k * 15, 'text-anchor': right ? 'start' : 'end' }, String(mk.label || fmtN(x)).slice(0, 40)));
+  });
+  (hlines || []).slice(0, 3).forEach(h => {
+    const y = num(h && h.y); if (y == null || !yd || y < yd[0] || y > yd[1]) return;
+    svg.append(sv('line', { class: 'mark', x1: m.l, x2: W - m.r, y1: Y(y), y2: Y(y) }));
+    svg.append(sv('text', { class: 'lab', x: m.l + 6, y: Y(y) - 6, 'text-anchor': 'start' }, String(h.label || fmtN(y)).slice(0, 40)));
+  });
+}
+function vizXY(spec, box, kind) {
+  const W = narrow() ? 380 : 640, H = narrow() ? 250 : 300, m = { l: 44, r: 14, t: 26, b: 44 };
+  let series = [], shadeLabel = '', dist = null;
+  if (kind === 'dist') {
+    const mu = num(spec.mean) == null ? 0 : num(spec.mean), sd = num(spec.sd);
+    if (!sd || sd <= 0) return null;
+    dist = { mu, sd };
+    const pts = []; for (let k = 0; k <= 160; k++) { const x = mu - 4 * sd + k * 8 * sd / 160; pts.push([x, Math.exp(-0.5 * Math.pow((x - mu) / sd, 2)) / (sd * Math.sqrt(2 * Math.PI))]); }
+    series = [{ name: 'Probability density', points: pts }];
+  } else {
+    series = (Array.isArray(spec.series) ? spec.series : []).slice(0, 3).map(s => ({
+      name: String((s && s.name) || '').slice(0, 40),
+      points: (Array.isArray(s && s.points) ? s.points : []).slice(0, 500).map(p => [num(p && p[0]), num(p && p[1])]).filter(p => p[0] != null && p[1] != null).sort((a, b) => a[0] - b[0])
+    })).filter(s => s.points.length >= 2);
+    if (!series.length) return null;
+  }
+  const all = [].concat.apply([], series.map(s => s.points));
+  let xd = [Math.min.apply(null, all.map(p => p[0])), Math.max.apply(null, all.map(p => p[0]))];
+  let ymin = Math.min.apply(null, all.map(p => p[1])), ymax = Math.max.apply(null, all.map(p => p[1]));
+  (spec.hlines || []).forEach(h => { const y = num(h && h.y); if (y != null) { ymin = Math.min(ymin, y); ymax = Math.max(ymax, y); } });
+  if (kind === 'dist') ymin = 0; else if (ymin > 0 && ymin < (ymax - ymin) * 0.6) ymin = 0;
+  const pad = (ymax - ymin || Math.abs(ymax) || 1) * 0.1;
+  const yd = kind === 'dist' ? null : [ymin === 0 ? 0 : ymin - pad, ymax + pad];
+  const yd2 = yd || [0, ymax * 1.12];
+  const f = frame(W, H, m, xd, yd, spec.x, kind === 'dist' ? '' : spec.y);
+  const svg = f.svg, X = f.X, Y = v => H - m.b - (v - yd2[0]) / (yd2[1] - yd2[0] || 1) * (H - m.t - m.b);
+  const colors = ['var(--s1)', 'var(--s2)', 'var(--s3)'];
+  // shaded tail or band under the curve
+  if (dist && spec.shade && typeof spec.shade === 'object') {
+    const sh = spec.shade; let a = xd[0], b = xd[1];
+    if (num(sh.below) != null) b = num(sh.below); else if (num(sh.above) != null) a = num(sh.above); else if (Array.isArray(sh.between)) { a = num(sh.between[0]); b = num(sh.between[1]); }
+    if (a != null && b != null && b > a) {
+      const pts = series[0].points.filter(p => p[0] >= a && p[0] <= b);
+      if (pts.length > 1) {
+        let d = 'M' + X(pts[0][0]) + ' ' + Y(0); pts.forEach(p => { d += 'L' + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }); d += 'L' + X(pts[pts.length - 1][0]) + ' ' + Y(0) + 'Z';
+        svg.insertBefore(sv('path', { d, fill: 'var(--s2)', 'fill-opacity': 0.35 }), svg.firstChild.nextSibling);
+        const prob = normCdf(Math.min(b, xd[1]), dist.mu, dist.sd) - normCdf(Math.max(a, xd[0]), dist.mu, dist.sd);
+        shadeLabel = (spec.shadeLabel ? String(spec.shadeLabel).slice(0, 50) + ': ' : 'Shaded area: ') + pct(prob) + ' of outcomes';
+        const mid = pts[Math.floor(pts.length / 2)];
+        svg.append(sv('text', { class: 'lab', x: X(mid[0]), y: Y(mid[1]) - 10, 'text-anchor': 'middle' }, pct(prob)));
+      }
+    }
+  }
+  series.forEach((s, k) => {
+    let d = ''; s.points.forEach((p, j) => { d += (j ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); });
+    svg.append(sv('path', { d, fill: 'none', stroke: colors[k], 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+    if (kind === 'line' && s.points.length <= 12) s.points.forEach(p => svg.append(sv('circle', { cx: X(p[0]), cy: Y(p[1]), r: 4, fill: colors[k], stroke: 'var(--bg)', 'stroke-width': 2 })));
+    if (kind === 'line' && series.length > 1 && s.name) { const lp = s.points[s.points.length - 1]; svg.append(sv('text', { class: 'lab', x: X(lp[0]) - 4, y: Y(lp[1]) - 8, 'text-anchor': 'end' }, s.name)); }
+  });
+  drawMarks(svg, X, Y, H, m, W, xd, yd2, spec.marks, kind === 'dist' ? [] : spec.hlines);
+  if (series.length > 1) { const lg = el('div', 'viz-legend'); series.forEach((s, k) => { const it = el('span'); const sw = el('i'); sw.style.background = colors[k]; it.append(sw, s.name || 'Series ' + (k + 1)); lg.append(it); }); box.append(lg); }
+  box.append(svg);
+  hoverLayer(box, svg, W, H, m, sx => {
+    const xv = xd[0] + (sx - m.l) / (W - m.l - m.r) * (xd[1] - xd[0]);
+    if (xv < xd[0] || xv > xd[1]) return null;
+    if (dist) { const yv = Math.exp(-0.5 * Math.pow((xv - dist.mu) / dist.sd, 2)) / (dist.sd * Math.sqrt(2 * Math.PI)); return { x: X(xv), dots: [{ x: X(xv), y: Y(yv), c: colors[0] }], lines: [(spec.x || 'x') + ': ' + fmtN(xv), 'Chance of a value this low or lower: ' + pct(normCdf(xv, dist.mu, dist.sd))] }; }
+    const lines = [], dots = []; let xs = null;
+    series.forEach((s, k) => { let best = s.points[0]; s.points.forEach(p => { if (Math.abs(p[0] - xv) < Math.abs(best[0] - xv)) best = p; }); if (xs == null) xs = best[0]; dots.push({ x: X(best[0]), y: Y(best[1]), c: colors[k] }); lines.push((s.name || spec.y || 'y') + ': ' + fmtN(best[1])); });
+    return { x: X(xs), dots, lines: [(spec.x || 'x') + ': ' + fmtN(xs)].concat(lines) };
+  });
+  if (shadeLabel) box.append(el('div', 'viz-note', shadeLabel));
+  if (dist) addTable(box, ['Point', spec.x || 'Value', 'Share of outcomes below'], (spec.marks || []).slice(0, 6).filter(mk => num(mk && mk.x) != null).map(mk => [String(mk.label || ''), fmtN(num(mk.x)), pct(normCdf(num(mk.x), dist.mu, dist.sd))]));
+  else addTable(box, [spec.x || 'x'].concat(series.map(s => s.name || spec.y || 'y')), series[0].points.slice(0, 60).map(p => [fmtN(p[0])].concat(series.map(s => { const q = s.points.find(z => z[0] === p[0]); return q ? fmtN(q[1]) : ''; }))));
+  return box;
+}
+function vizBar(spec, box) {
+  const bars = (Array.isArray(spec.bars) ? spec.bars : []).slice(0, 12).map(b => ({ label: String((b && b.label) || '').slice(0, 24), value: num(b && b.value) })).filter(b => b.value != null);
+  if (!bars.length) return null;
+  const W = narrow() ? 380 : 640, H = narrow() ? 240 : 290, m = { l: 44, r: 14, t: 30, b: 44 };
+  const lo = Math.min(0, Math.min.apply(null, bars.map(b => b.value))), hi = Math.max(0, Math.max.apply(null, bars.map(b => b.value)));
+  const yd = [lo < 0 ? lo * 1.15 : 0, hi * 1.15 || 1];
+  const f = frame(W, H, m, null, yd, '', spec.y); const svg = f.svg, Y = f.Y;
+  const band = (W - m.l - m.r) / bars.length, bw = Math.min(56, band * 0.6);
+  const tt = el('div', 'viz-tt'); tt.hidden = true; box.append(tt);
+  bars.forEach((b, k) => {
+    const cx = m.l + band * (k + 0.5), y0 = Y(0), y1 = Y(b.value), top = Math.min(y0, y1), h = Math.max(Math.abs(y1 - y0), 1), r = Math.min(4, h / 2);
+    const up = b.value >= 0, x = cx - bw / 2;
+    const d = up ? 'M' + x + ' ' + (top + h) + 'V' + (top + r) + 'Q' + x + ' ' + top + ' ' + (x + r) + ' ' + top + 'H' + (x + bw - r) + 'Q' + (x + bw) + ' ' + top + ' ' + (x + bw) + ' ' + (top + r) + 'V' + (top + h) + 'Z'
+                 : 'M' + x + ' ' + top + 'V' + (top + h - r) + 'Q' + x + ' ' + (top + h) + ' ' + (x + r) + ' ' + (top + h) + 'H' + (x + bw - r) + 'Q' + (x + bw) + ' ' + (top + h) + ' ' + (x + bw) + ' ' + (top + h - r) + 'V' + top + 'Z';
+    const hl = spec.highlight && String(spec.highlight) === b.label;
+    const p = sv('path', { d, fill: hl ? 'var(--s2)' : 'var(--s1)' }); svg.append(p);
+    svg.append(sv('text', { class: 'lab', x: cx, y: up ? top - 6 : top + h + 14, 'text-anchor': 'middle' }, fmtN(b.value)));
+    svg.append(sv('text', { x: cx, y: H - m.b + 18, 'text-anchor': 'middle' }, b.label));
+    const hit = sv('rect', { x: cx - band / 2, y: m.t, width: band, height: H - m.t - m.b, fill: 'transparent' }); svg.append(hit);
+    hit.addEventListener('mousemove', ev => { const br = box.getBoundingClientRect(); tt.textContent = b.label + ': ' + fmtN(b.value); tt.hidden = false; tt.style.left = Math.min(ev.clientX - br.left + 12, br.width - tt.offsetWidth - 6) + 'px'; tt.style.top = Math.max(ev.clientY - br.top - 34, 4) + 'px'; p.setAttribute('fill-opacity', 0.8); });
+    hit.addEventListener('mouseleave', () => { tt.hidden = true; p.setAttribute('fill-opacity', 1); });
+  });
+  box.append(svg);
+  addTable(box, ['Item', spec.y || 'Value'], bars.map(b => [b.label, fmtN(b.value)]));
+  return box;
+}
+
 /* ---------- doubts ---------- */
 function addMsg(role, content) {
   const d = el('div', 'msg ' + (role === 'user' ? 'q' : 'a'));
   const b = el('div', 'body');
-  if (role === 'user') b.append(el('p', null, content)); else b.innerHTML = md(content);
+  if (role === 'user') b.append(el('p', null, content)); else { b.innerHTML = md(content); hydrate(b); }
   d.append(el('div', 'label', role === 'user' ? 'You' : 'Claude'), b); $('thread').appendChild(d);
   return d;
 }
@@ -1039,6 +1282,12 @@ function rulesFor(i) {
     + '**Another way to see it** - an analogy, picture or contrast with a nearby idea, in one to three sentences.\n'
     + '**In this document** - one to three other lines from the excerpt that define, use or build on the same idea, each cited by its bracketed number exactly like [12], with a few words on how it connects. Omit this part if nothing in the excerpt is related.\n'
     + '**To read further** - one to three standard, well-known sources or search terms for this concept (textbook and author, or the name of the standard result). No URLs, no page numbers, and only sources you are confident exist. Omit this part if unsure.\n\n'
+    + 'VISUALS: when the line or the question involves numbers, a formula, a distribution, a trend, a threshold or a comparison, include ONE chart, placed straight after the Example part, as a fenced code block whose language is viz and whose body is only JSON in one of these shapes:\n'
+    + '{"type":"dist","title":string,"mean":number,"sd":number,"x":"axis label","shade":{"below":number} or {"above":number} or {"between":[a,b]},"shadeLabel":string,"marks":[{"x":number,"label":string}]} for a normal distribution (VaR, z-scores, confidence intervals);\n'
+    + '{"type":"line","title":string,"x":"axis label","y":"axis label","series":[{"name":string,"points":[[x,y],...]}],"marks":[{"x":number,"label":string}],"hlines":[{"y":number,"label":string}]} for trends, payoffs, growth or functions (at most 3 series, at most 60 points each);\n'
+    + '{"type":"bar","title":string,"y":"axis label","bars":[{"label":string,"value":number}],"highlight":"label of the bar to emphasise"} for comparing a few quantities;\n'
+    + '{"type":"steps","title":string,"rows":[{"step":string,"calc":string,"result":string}]} for a calculation worked line by line with the real numbers, ending on the final result.\n'
+    + 'Use the actual numbers from the document where possible. After the code block, write one sentence telling the reader what to notice in the chart. For a calculation, prefer a steps table, and add a second chart only if the picture adds something. Never put anything except JSON inside the viz block.\n\n'
     + 'For FOLLOW-UP questions, answer conversationally in under 120 words, with a fresh example whenever it helps, and cite lines as [number] when you point at the document. If the reader asks you to check their understanding, ask one question and wait for their answer.\n\n'
     + 'End every reply with these three final lines, exactly in this form:\n'
     + 'CONCEPT: the concept this doubt is about, in two to four words\n'
@@ -1083,9 +1332,9 @@ async function ask(q) {
     while (recent.length && recent[0].role !== 'user') recent.shift();
     const res = await sampleFn([{ role: 'user', content: rulesFor(i) }, ...recent], {
       cache: false, signal: ctl.signal, modelTier: prefs.tier === 'quick' ? 'quick' : 'default',
-      onText: ({ text }) => { body.innerHTML = md(splitNext(text).text); }
+      onText: ({ text }) => { setAnswer(body, splitNext(text).text); }
     });
-    const parts = splitNext(res.text); answer = parts.text || res.text; next = parts.next; ok = true; body.innerHTML = md(answer);
+    const parts = splitNext(res.text); answer = parts.text || res.text; next = parts.next; ok = true; setAnswer(body, answer);
     if (first) {
       bumpConcept(parts.concept);
       if (parts.card && addCard(parts.card.q, parts.card.a, parts.concept, i)) bubble.appendChild(el('div', 'note', 'Added to your review cards.'));
@@ -1095,7 +1344,7 @@ async function ask(q) {
   } catch (e) {
     const code = e && e.code;
     answer = code === 'refused' ? '' : splitNext((e && e.text) || '').text;
-    body.innerHTML = answer ? md(answer) : '';
+    if (answer) setAnswer(body, answer); else body.innerHTML = '';
     if (code === 'cancelled') { if (answer) note('Stopped.'); }
     else note(ERR[code] || 'The answer was interrupted. Ask again to retry.');
     if (GONE.indexOf(code) >= 0) sampleFn = null;
@@ -1366,7 +1615,7 @@ function closeProfile() { $('profile').hidden = true; }
 function applyPrefs() {
   document.documentElement.style.setProperty('--fs', prefs.fs + 'px');
   $('rate').value = prefs.rate; if ($('rate').selectedIndex < 0) $('rate').value = '1';
-  $('voice').checked = !!prefs.voice; $('pauseAt').value = prefs.pauseAt; $('tier').value = prefs.tier; $('speakAns').checked = !!prefs.speakAns; $('handsFree').checked = !!prefs.handsFree;
+  $('voice').checked = !!prefs.voice; $('pauseAt').value = prefs.pauseAt; $('numMode').value = prefs.numMode; $('tier').value = prefs.tier; $('speakAns').checked = !!prefs.speakAns; $('handsFree').checked = !!prefs.handsFree;
   $('help').hidden = !prefs.help;
   $('fsDown').disabled = prefs.fs <= 15; $('fsUp').disabled = prefs.fs >= 26;
 }
@@ -1384,6 +1633,7 @@ $('pasteBox').onsubmit = e => {
 };
 $('lines').onclick = e => {
   if (e.target.closest('.card')) return;
+  if (e.target.closest('.vis-btn')) { const i0 = +e.target.closest('.line').dataset.i; if (i0 !== state.idx) { closeDoubt(true); closeQuiz(); goTo(i0, true); } openDoubt(); ask(VIS_Q); return; }
   const li = e.target.closest('.line'); if (!li) return;
   const i = +li.dataset.i, was = state.playing;
   if (i !== state.idx) { closeDoubt(true); closeQuiz(); }
@@ -1432,6 +1682,7 @@ $('settingsBtn').onclick = () => { const open = $('settings').hidden; $('setting
 $('rate').onchange = e => { prefs.rate = e.target.value; savePrefs(); if (state.playing) playCurrent(); };
 $('voice').onchange = e => { prefs.voice = e.target.checked; savePrefs(); if (state.playing) playCurrent(); else hush(); };
 $('pauseAt').onchange = e => { prefs.pauseAt = e.target.value; savePrefs(); };
+$('numMode').onchange = e => { prefs.numMode = e.target.value; savePrefs(); };
 $('tier').onchange = e => { prefs.tier = e.target.value; savePrefs(); };
 $('speakAns').onchange = e => { prefs.speakAns = e.target.checked; savePrefs(); if (!prefs.speakAns && !state.playing) hush(); };
 $('fsDown').onclick = () => { prefs.fs = Math.max(15, prefs.fs - 1); savePrefs(); applyPrefs(); };

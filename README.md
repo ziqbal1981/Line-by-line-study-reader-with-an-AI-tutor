@@ -8,6 +8,7 @@ A study reader that goes through a document one line at a time and stops wheneve
 
 - **Reads line by line.** Upload a PDF, Word file (.docx) or text file, or paste text. It splits the document into sentences, highlights the current one and can read it aloud. You pick the voice, the speed, and whether it pauses after each paragraph or topic.
 - **Stops on a doubt.** Press *I have a doubt* (or `D`) to pause on the current line and ask about it. The first answer always has a short explanation, a worked example, another angle on the idea, links to related lines in the same document, and sources to read further. Then you get suggested follow-up questions.
+- **Explains numbers visually.** When a line has figures or a formula, playback pauses and the answer comes with a worked calculation table and a chart: a normal distribution with the tail shaded and its probability, a line chart for trends and thresholds, or a bar chart for comparisons. Claude returns a small JSON chart description and the page draws it as SVG. No model-written code runs. Hover any chart for exact values, or open it as a table.
 - **Jumps between topics.** Headings are detected from PDF font sizes, Word heading styles and plain-text patterns. They show up in a topics panel with search. Running headers, footers and page numbers are removed from PDFs.
 - **Acts as a tutor.**
   - A learner profile (level, goal, strengths, weak areas) shapes every answer.
@@ -16,9 +17,9 @@ A study reader that goes through a document one line at a time and stops wheneve
   - Every doubt and every missed question becomes a flashcard on a spaced schedule (1, 3, 7, 14 and 30 days).
 - **Talk it through.** Answers can be read aloud, and text you dictate with your system's dictation is sent when you pause.
 
-| Review cards | Explain it back | Phone layout |
+| Visual explanation | Review cards | Explain it back |
 |---|---|---|
-| ![](docs/review.png) | ![](docs/explain-back.png) | ![](docs/mobile-topics.png) |
+| ![](docs/visual.png) | ![](docs/review.png) | ![](docs/explain-back.png) |
 
 ## How it is built
 
